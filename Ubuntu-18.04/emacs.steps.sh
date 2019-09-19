@@ -1,0 +1,37 @@
+#
+# Install Emacs from source with everything needed for a smooth Spacemace experience
+#
+
+
+sudo sed -i.save "s/# deb-src http:\/\/us.archive.ubuntu.com\/ubuntu\/ bionic main restricted/deb-src http:\/\/us.archive.ubuntu.com\/ubuntu\/ bionic main restricted/g" /etc/apt/sources.list
+sudo apt update
+sudo apt -y upgrade
+sudo apt -y install curl git silversearcher-ag
+[ -e ~/.emacs.d ] || git clone https://github.com/syl20bnr/spacemacs -b develop ~/.emacs.d
+
+# Compile Emacs
+git clone https://github.com/mirrors/emacs.git ~/emacs
+sudo apt -y build-dep emacs
+sudo apt -y install build-essential automake texinfo libjpeg-dev libncurses5-dev libtiff5-dev libgif-dev libpng-dev libxpm-dev libgtk-3-dev libgnutls28-dev
+cd ~/emacs ; git checkout emacs-26.1.92
+cd ~/emacs ; ./autogen.sh
+cd ~/emacs ; ./configure --with-modules
+cd ~/emacs ; make -j8
+cd ~/emacs ; sudo make install
+
+# Install font Source Code Pro
+cd /tmp && wget --no-verbose -O source-code-pro.zip https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
+cd /tmp && unzip source-code-pro.zip -d source-code-pro
+mkdir -p ~/.fonts
+cp -v /tmp/source-code-pro/*/OTF/*.otf ~/.fonts/
+fc-cache -fv
+rm -rf /tmp/source-code-pro{,.zip}
+
+# Install up-to-date cmake for vterm
+cd /tmp && wget -qO- https://github.com/Kitware/CMake/releases/download/v3.15.3/cmake-3.15.3.tar.gz | tar xzvf -
+cd /tmp/cmake-3.15.3 && ./bootstrap
+cd /tmp/cmake-3.15.3 && make -j 8
+cd /tmp/cmake-3.15.3 && sudo make install
+
+# Install libtool for vterm
+sudo apt install libtool-bin
