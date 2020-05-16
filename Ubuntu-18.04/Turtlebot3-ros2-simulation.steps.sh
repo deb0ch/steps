@@ -12,7 +12,7 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main
 sudo apt -y update
 sudo apt -y install ros-dashing-desktop
 sudo apt -y install python3-argcomplete  # auto-completion for ros2 CLI
-echo "dashing" >> ~/.rosversion
+echo "dashing" > ~/.rosversion
 echo 'source /opt/ros/$(cat ~/.rosversion)/setup.bash' >> ~/.bashrc
 sudo apt -y install python3-colcon-common-extensions
 
